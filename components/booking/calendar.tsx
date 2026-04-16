@@ -1,9 +1,17 @@
 "use client";
 
-import { addMonths, eachDayOfInterval, endOfMonth, format, isSameDay, isSameMonth, startOfMonth, subMonths } from "date-fns";
+import {
+  addMonths,
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  isSameDay,
+  startOfMonth,
+  subMonths
+} from "date-fns";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
-import { ChevronDownIcon } from "@/components/ui/icons";
+import { ArrowLeftIcon, ArrowRightIcon } from "@/components/ui/icons";
 
 export function BookingCalendar({
   value,
@@ -15,23 +23,37 @@ export function BookingCalendar({
   const monthStart = startOfMonth(value);
   const monthEnd = endOfMonth(value);
   const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
-  const offset = (monthStart.getDay() + 6) % 7;
+  const offset = monthStart.getDay();
   const blanks = Array.from({ length: offset }, (_, index) => index);
 
   return (
     <div className="rounded-[16px] bg-transparent">
-      <div className="mb-4 flex items-center justify-between">
-        <Button type="button" variant="ghost" size="sm" className="rounded-xl px-2.5" onClick={() => onChange(subMonths(value, 1))}>
-          <ChevronDownIcon className="h-4 w-4 rotate-90" />
-        </Button>
-        <p className="text-sm font-semibold text-white">{format(value, "MMMM yyyy")}</p>
-        <Button type="button" variant="ghost" size="sm" className="rounded-xl px-2.5" onClick={() => onChange(addMonths(value, 1))}>
-          <ChevronDownIcon className="h-4 w-4 -rotate-90" />
-        </Button>
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <p className="text-[1.05rem] font-semibold text-white">{format(value, "MMMM yyyy")}</p>
+        <div className="flex items-center gap-1.5">
+          <Button
+            type="button"
+            variant="darkGhost"
+            size="icon"
+            className="h-8 w-8 rounded-full border border-transparent text-[#8f949d] hover:border-[var(--border)]"
+            onClick={() => onChange(subMonths(value, 1))}
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+          </Button>
+          <Button
+            type="button"
+            variant="darkGhost"
+            size="icon"
+            className="h-8 w-8 rounded-full border border-transparent text-[#8f949d] hover:border-[var(--border)]"
+            onClick={() => onChange(addMonths(value, 1))}
+          >
+            <ArrowRightIcon className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-1.5 text-center text-[11px] font-semibold text-[#71717a]">
-        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+      <div className="grid grid-cols-7 gap-2 text-center text-[11px] font-semibold uppercase tracking-[0.16em] text-[#f3f4f6]">
+        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
           <div key={day} className="py-2">
             {day}
           </div>
@@ -41,7 +63,6 @@ export function BookingCalendar({
         ))}
         {days.map((day) => {
           const selected = isSameDay(day, value);
-          const isCurrentMonth = isSameMonth(day, value);
 
           return (
             <button
@@ -49,11 +70,10 @@ export function BookingCalendar({
               type="button"
               onClick={() => onChange(day)}
               className={cn(
-                "aspect-square rounded-[10px] text-[13px] transition-all duration-150",
+                "aspect-square rounded-[10px] text-[20px] font-medium transition-all duration-150 sm:text-[18px]",
                 selected
-                  ? "bg-white font-semibold text-black"
-                  : "hover:bg-[var(--panel-soft)]",
-                isCurrentMonth ? "text-white" : "text-[#666666]"
+                  ? "bg-[#f3f4f6] font-semibold text-[#09090b]"
+                  : "text-[#e5e7eb] hover:bg-[#2f3339]"
               )}
             >
               {format(day, "d")}

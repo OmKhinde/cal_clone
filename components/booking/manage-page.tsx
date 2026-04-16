@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BookingCalendar } from "@/components/booking/calendar";
 import { TimeSlotList } from "@/components/booking/time-slot-list";
+import { BackButton } from "@/components/ui/back-button";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -151,6 +152,8 @@ export function ManageBookingPage({ token }: { token: string }) {
   return (
     <div className="min-h-screen bg-[var(--background)] px-4 py-10">
       <div className="mx-auto max-w-3xl space-y-6">
+        <BackButton fallbackHref="/" label="Back" className="rounded-[12px] px-3 text-[#d5d9e1]" />
+
         <Card className="p-8">
           <div className="flex flex-wrap items-center gap-3">
             <span className="rounded-full bg-[var(--panel-muted)] px-3 py-1 text-xs font-semibold text-[var(--muted)]">

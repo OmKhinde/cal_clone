@@ -15,14 +15,14 @@ export function TimeSlotList({
 }) {
   if (!slots.length) {
     return (
-      <div className="rounded-[12px] border border-dashed border-[var(--border)] bg-[var(--panel-muted)] p-6 text-sm text-[#b8b8b8]">
+      <div className="rounded-[16px] border border-dashed border-[var(--border)] bg-[var(--panel-muted)] p-6 text-sm text-[#b8b8b8]">
         No open times for this day. Try another date.
       </div>
     );
   }
 
   return (
-    <div className="grid gap-3">
+    <div className="grid gap-2.5">
       {slots.map((slot) => {
         const selected = selectedStartTime === slot.startTime;
         const unavailable = !slot.available;
@@ -39,9 +39,12 @@ export function TimeSlotList({
             disabled={unavailable}
             selected={selected}
             unavailable={unavailable}
-            className={cn(selected && "ring-4 ring-[var(--ring)]")}
+            className={cn("min-h-[44px]", selected && "ring-2 ring-white/10")}
           >
-            <span className="text-sm font-medium">{slot.label}</span>
+            <span className="flex items-center gap-2 text-base font-semibold">
+              <span className={cn("h-2.5 w-2.5 rounded-full", unavailable ? "bg-[#4b5563]" : "bg-[#14d9a6]")} />
+              {slot.label}
+            </span>
             {typeof slot.remainingSeats === "number" ? (
               <span className="text-xs text-inherit">{slot.remainingSeats} left</span>
             ) : unavailable ? (

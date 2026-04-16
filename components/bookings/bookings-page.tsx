@@ -21,6 +21,7 @@ export function BookingsPage() {
   const [status, setStatus] = useState<(typeof tabs)[number]>("upcoming");
   const [expandedUid, setExpandedUid] = useState<string | null>(null);
   const [cancelReason, setCancelReason] = useState("");
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["bookings", status],
@@ -96,6 +97,7 @@ export function BookingsPage() {
   const cancelMutation = useMutation({
     mutationFn: ({ uid, reason }: { uid: string; reason?: string }) => api.cancelBooking(uid, reason),
     onSuccess: async (cancelledBooking) => {
+      setActionError(null);
       removeBookingFromTab("upcoming", cancelledBooking.uid);
       removeBookingFromTab("pending", cancelledBooking.uid);
       removeBookingFromTab("past", cancelledBooking.uid);
@@ -103,18 +105,34 @@ export function BookingsPage() {
       await invalidateBookings();
       setExpandedUid(null);
       setCancelReason("");
+    },
+    onError: (error) => {
+      setActionError(error instanceof Error ? error.message : "Cancelling this booking failed.");
     }
   });
 
   const confirmMutation = useMutation({
     mutationFn: api.confirmBooking,
-    onSuccess: invalidateBookings
+    onSuccess: async (confirmedBooking, uid) => {
+      setActionError(null);
+      removeBookingFromTab("pending", uid);
+      removeBookingFromTab("upcoming", uid);
+      removeBookingFromTab("past", uid);
+      addBookingToMatchingTab(confirmedBooking);
+      await invalidateBookings();
+      setExpandedUid(null);
+      setCancelReason("");
+    },
+    onError: (error) => {
+      setActionError(error instanceof Error ? error.message : "Confirming this booking failed.");
+    }
   });
 
   const rescheduleMutation = useMutation({
     mutationFn: ({ uid, start, requestKey }: { uid: string; start: string; requestKey: string }) =>
       api.rescheduleBooking(uid, start, undefined, requestKey),
     onSuccess: async (updatedBooking, variables) => {
+      setActionError(null);
       removeBookingFromTab("upcoming", variables.uid);
       removeBookingFromTab("pending", variables.uid);
       removeBookingFromTab("past", variables.uid);
@@ -124,13 +142,15 @@ export function BookingsPage() {
       setExpandedUid(null);
       setCancelReason("");
     },
-    onError: invalidateBookings
+    onError: async (error) => {
+      setActionError(error instanceof Error ? error.message : "Rescheduling this booking failed.");
+      await invalidateBookings();
+    }
   });
 
   return (
     <div>
       <PageHeader
-        eyebrow="Bookings"
         title="Bookings"
         description="Review accepted and pending bookings, confirm requests, cancel with context, and reschedule from the host dashboard."
         action={
@@ -161,6 +181,12 @@ export function BookingsPage() {
         </div>
         <Button variant="secondary" size="sm"><FilterIcon className="h-4 w-4" />Filter</Button>
       </div>
+
+      {actionError ? (
+        <p className="mb-4 rounded-md border border-red-500/25 bg-red-950/40 px-4 py-3 text-sm text-red-300">
+          {actionError}
+        </p>
+      ) : null}
 
       {isLoading ? (
         <Skeleton className="h-96 w-full" />
@@ -227,7 +253,11 @@ function BookingCard({
   onReschedule: (start: string, requestKey: string) => void;
   busy: boolean;
 }) {
-  const canReschedule = booking.status === "ACCEPTED";
+  const bookingStart = new Date(booking.start);
+  const isPastBooking = bookingStart.getTime() < Date.now();
+  const canConfirm = booking.status === "PENDING" && !isPastBooking;
+  const canCancel = (booking.status === "ACCEPTED" || booking.status === "PENDING") && !isPastBooking;
+  const canReschedule = booking.status === "ACCEPTED" && !isPastBooking;
 
   return (
     <Card className="p-5">
@@ -252,12 +282,12 @@ function BookingCard({
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {booking.status === "PENDING" ? (
+          {canConfirm ? (
             <Button disabled={busy} onClick={onConfirm}>
               Confirm
             </Button>
           ) : null}
-          {(booking.status === "ACCEPTED" || booking.status === "PENDING") ? (
+          {canCancel ? (
             <Button variant="danger" disabled={busy} onClick={onCancel}>
               Cancel
             </Button>
@@ -274,10 +304,11 @@ function BookingCard({
             <p><span className="font-semibold text-white">Host:</span> {booking.hosts.map((host) => host.name).join(", ")}</p>
             <p><span className="font-semibold text-white">UID:</span> {booking.uid}</p>
             {booking.meetingUrl ? <p><span className="font-semibold text-white">Meeting URL:</span> {booking.meetingUrl}</p> : null}
-            {booking.cancellationReason ? <p><span className="font-semibold text-white">Cancellation reason:</span> {booking.cancellationReason}</p> : null}
+          {booking.cancellationReason ? <p><span className="font-semibold text-white">Cancellation reason:</span> {booking.cancellationReason}</p> : null}
+          {isPastBooking ? <p><span className="font-semibold text-white">State:</span> This booking is in the past, so confirm/cancel/reschedule actions are disabled.</p> : null}
           </div>
 
-          {(booking.status === "ACCEPTED" || booking.status === "PENDING") ? (
+          {canCancel ? (
             <label className="grid gap-2 text-sm">
               <span className="font-semibold text-white">Cancel reason</span>
               <Textarea value={cancelReason} onChange={(event) => onCancelReasonChange(event.target.value)} />

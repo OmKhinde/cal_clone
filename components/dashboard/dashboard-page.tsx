@@ -46,7 +46,6 @@ export function DashboardPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="Dashboard"
         title="Dashboard"
         description="A tight overview of your current event catalog, active weekly hours, and the bookings that need attention first."
       />
@@ -106,12 +105,12 @@ export function DashboardPage() {
             {activeEventTypes.slice(0, 4).map((eventType) => (
               <Link
                 key={eventType.id}
-                href={`/booking/${eventType.user?.username ?? "demo"}/${eventType.slug}`}
+                href={`/u/${eventType.user?.username ?? "demo"}/${eventType.slug}`}
                 className="rounded-[14px] border border-[var(--border)] bg-[var(--panel-muted)] p-4 transition hover:border-[var(--border-strong)] hover:bg-[#181818]"
               >
                 <p className="text-sm font-semibold text-white">{eventType.title}</p>
                 <p className="mt-1 text-sm text-[#b8b8b8]">
-                  /booking/{eventType.user?.username ?? "demo"}/{eventType.slug}
+                  /u/{eventType.user?.username ?? "demo"}/{eventType.slug}
                 </p>
               </Link>
             ))}

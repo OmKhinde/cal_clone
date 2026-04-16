@@ -99,6 +99,22 @@ export type PublicEvent = {
   color: string;
 };
 
+export type PublicProfile = {
+  name: string;
+  username: string;
+  timezone: string;
+  events: Array<{
+    id: number;
+    title: string;
+    description?: string | null;
+    duration: number;
+    slug: string;
+    color: string;
+    schedulingType: SchedulingType;
+    bookingUrl: string;
+  }>;
+};
+
 export type AvailabilityRow = {
   dayOfWeek: DayOfWeek;
   startTime: string;

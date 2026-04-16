@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Cal Clone",
+  title: "Cal.com",
   description: "Cal.com-style scheduler UI built against the local Express + Prisma backend."
 };
 

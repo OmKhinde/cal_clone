@@ -7,6 +7,7 @@ import type {
   EventType,
   EventTypePayload,
   PublicEvent,
+  PublicProfile,
   SlotsResponse
 } from "@/lib/api/types";
 
@@ -97,6 +98,8 @@ export const api = {
   getAvailability: async () => request<AvailabilityResponse>("/availability"),
   replaceAvailability: async (payload: AvailabilityResponse) =>
     request<AvailabilityResponse>("/availability", { method: "PUT", body: JSON.stringify(payload) }),
+  getPublicProfile: async (username: string) =>
+    unwrap(await request<{ data: PublicProfile }>(`/public/profile/${username}`)),
   getPublicEvent: async (username: string, slug: string) =>
     unwrap(await request<{ data: PublicEvent }>(`/public/event/${username}/${slug}`)),
   getSlots: async (eventTypeId: number, date: string) =>

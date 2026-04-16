@@ -76,10 +76,8 @@ export function EventTypesPage() {
   });
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
-      <div>
+    <div>
       <PageHeader
-        eyebrow="Event Types"
         title="Event types"
         description="Configure different events for people to book on your calendar."
         action={
@@ -125,7 +123,7 @@ export function EventTypesPage() {
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <h2 className="truncate text-[15px] font-semibold text-white">{eventType.title}</h2>
-                  <p className="truncate text-[14px] text-[#8f949d]">/{eventType.user?.username ?? "demo"}/{eventType.slug}</p>
+                  <p className="truncate text-[14px] text-[#8f949d]">/u/{eventType.user?.username ?? "demo"}/{eventType.slug}</p>
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <span className="inline-flex items-center gap-1 rounded-[6px] bg-[#303236] px-2.5 py-1 text-[12px] font-medium text-white">
@@ -177,7 +175,7 @@ export function EventTypesPage() {
 
                 <div className="relative flex flex-wrap gap-0 rounded-[10px] border border-[var(--border)]">
                   <Link
-                    href={`/booking/${eventType.user?.username ?? "demo"}/${eventType.slug}`}
+                    href={`/u/${eventType.user?.username ?? "demo"}/${eventType.slug}`}
                     className="px-3 py-2 text-sm text-white transition hover:bg-[var(--panel-soft)]"
                   >
                     <ExternalLinkIcon className="h-4 w-4" />
@@ -186,7 +184,7 @@ export function EventTypesPage() {
                     type="button"
                     className="border-l border-[var(--border)] px-3 py-2 text-sm text-white transition hover:bg-[var(--panel-soft)]"
                     onClick={() => {
-                      navigator.clipboard?.writeText(`${window.location.origin}/booking/${eventType.user?.username ?? "demo"}/${eventType.slug}`);
+                      navigator.clipboard?.writeText(`${window.location.origin}/u/${eventType.user?.username ?? "demo"}/${eventType.slug}`);
                     }}
                   >
                     <LinkIcon className="h-4 w-4" />
@@ -222,7 +220,7 @@ export function EventTypesPage() {
                         type="button"
                         className="flex w-full items-center gap-2 border-t border-[var(--border)] px-4 py-3 text-left text-[14px] text-white hover:bg-[var(--panel-soft)]"
                         onClick={() => {
-                          navigator.clipboard?.writeText(`${window.location.origin}/booking/${eventType.user?.username ?? "demo"}/${eventType.slug}`);
+                          navigator.clipboard?.writeText(`${window.location.origin}/u/${eventType.user?.username ?? "demo"}/${eventType.slug}`);
                           setOpenMenuId(null);
                         }}
                       >
@@ -255,28 +253,6 @@ export function EventTypesPage() {
           ))}
         </Card>
       )}
-      </div>
-
-      <Card className="hidden self-end p-4 xl:block">
-        <h3 className="text-[16px] font-semibold text-white">Try our Teams plan</h3>
-        <p className="mt-2 text-[14px] leading-6 text-[#a1a1aa]">
-          Remove Cal branding and get round robin scheduling + insights.
-        </p>
-        <div className="mt-4 flex gap-2">
-          <Button size="sm">Try it for free</Button>
-          <Button variant="secondary" size="sm">Learn more</Button>
-        </div>
-        <div className="mt-6 rounded-[12px] bg-white p-4 text-black">
-          <div className="flex items-center justify-between text-[11px] text-neutral-500">
-            <span>Customer</span>
-            <span>Support</span>
-          </div>
-          <div className="mt-5 rounded-[12px] border border-neutral-200 p-5 text-center">
-            <p className="text-sm font-semibold text-neutral-900">This event is scheduled</p>
-            <p className="mt-2 text-xs text-neutral-500">We emailed you and the other attendees a calendar invitation.</p>
-          </div>
-        </div>
-      </Card>
 
       <Modal
         open={modalOpen}

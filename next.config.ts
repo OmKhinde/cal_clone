@@ -7,6 +7,7 @@ const reservedTopLevelRoutes = [
   "availability",
   "bookings",
   "landing",
+  "u",
   "api",
   "_next",
   "favicon.ico"

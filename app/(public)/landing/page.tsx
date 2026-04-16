@@ -17,7 +17,7 @@ export default function LandingPage() {
             <Link href="/dashboard">
               <Button size="lg">Open dashboard</Button>
             </Link>
-            <Link href="/booking/demo/30min">
+            <Link href="/u/demo">
               <Button variant="secondary" size="lg">Try public booking</Button>
             </Link>
           </div>
