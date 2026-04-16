@@ -149,7 +149,7 @@ export function ManageBookingPage({ token }: { token: string }) {
   const canCancel = booking.status === "ACCEPTED" || booking.status === "PENDING";
 
   return (
-    <div className="min-h-screen px-4 py-10">
+    <div className="min-h-screen bg-[var(--background)] px-4 py-10">
       <div className="mx-auto max-w-3xl space-y-6">
         <Card className="p-8">
           <div className="flex flex-wrap items-center gap-3">

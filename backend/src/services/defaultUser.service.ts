@@ -84,3 +84,7 @@ export async function getDefaultUser(db: PrismaExecutor = prisma) {
 
   return defaultUserPromise;
 }
+
+export function syncDefaultUserCache(user: DefaultUserRecord) {
+  cachedDefaultUser = user;
+}

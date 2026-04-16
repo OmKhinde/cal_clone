@@ -1,6 +1,6 @@
 import { prisma } from "../prisma/client.js";
 import type { DayOfWeek } from "../types/enums.js";
-import { getDefaultUser } from "./defaultUser.service.js";
+import { getDefaultUser, syncDefaultUserCache } from "./defaultUser.service.js";
 
 type AvailabilityRow = {
   dayOfWeek: DayOfWeek;
@@ -42,6 +42,8 @@ export async function replaceAvailability(timezone: string, schedule: Availabili
       where: { id: user.id },
       data: { timezone }
     });
+
+    syncDefaultUserCache(updatedUser);
 
     await tx.availability.deleteMany({
       where: { userId: user.id }

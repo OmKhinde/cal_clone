@@ -1,32 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  --background: #111111;
-  --background-alt: #171717;
-  --foreground: #fafafa;
-  --muted: #a3a3a3;
-  --muted-strong: #d4d4d4;
-  --panel: #111111;
-  --panel-foreground: #fafafa;
-  --panel-muted: #1a1a1a;
-  --panel-soft: #252525;
-  --border: #2a2a2a;
-  --border-strong: #3a3a3a;
-  --accent: #ffffff;
-  --accent-foreground: #111111;
-  --accent-soft: #303030;
-  --danger: #f87171;
-  --danger-soft: rgba(127, 29, 29, 0.28);
+  --background: #0c0c0d;
+  --background-alt: #111214;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --muted-strong: #d4d4d8;
+  --panel: #111214;
+  --panel-foreground: #f4f4f5;
+  --panel-muted: #16181b;
+  --panel-soft: #1c1f23;
+  --panel-elevated: #14161a;
+  --border: #26292e;
+  --border-strong: #343841;
+  --accent: #fafafa;
+  --accent-foreground: #0c0c0d;
+  --accent-soft: #23262b;
+  --danger: #fca5a5;
+  --danger-soft: rgba(127, 29, 29, 0.22);
   --success: #86efac;
-  --success-soft: rgba(20, 83, 45, 0.24);
-  --sidebar: #151515;
-  --sidebar-muted: #e5e5e5;
-  --sidebar-border: #262626;
-  --ring: rgba(255, 255, 255, 0.16);
-  --shadow-soft: none;
-  --shadow-panel: none;
-  --radius-panel: 16px;
-  --radius-control: 12px;
+  --success-soft: rgba(20, 83, 45, 0.2);
+  --sidebar: #111112;
+  --sidebar-muted: #f4f4f5;
+  --sidebar-border: #202227;
+  --ring: rgba(255, 255, 255, 0.08);
+  --shadow-soft: 0 1px 0 rgba(255, 255, 255, 0.03);
+  --shadow-panel: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --radius-panel: 14px;
+  --radius-control: 10px;
 }
 
 * {
@@ -50,8 +51,9 @@ body {
   min-height: 100vh;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-manrope), "Segoe UI", sans-serif;
+  font-family: var(--font-inter), "Segoe UI", sans-serif;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -82,7 +84,7 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  color: #737373;
+  color: #71717a;
 }
 
 button:focus-visible,
@@ -99,6 +101,18 @@ input[type="checkbox"] {
 }
 
 ::selection {
-  background: #404040;
+  background: #2b2e34;
   color: #ffffff;
+}
+
+.app-shell-grid {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+@media (max-width: 1023px) {
+  .app-shell-grid {
+    grid-template-columns: 1fr;
+  }
 }

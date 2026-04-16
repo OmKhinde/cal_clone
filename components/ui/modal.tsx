@@ -19,20 +19,20 @@ export function Modal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
       <div className="absolute inset-0" onClick={onClose} />
       <div
         className={cn(
-          "relative z-10 w-full max-w-4xl rounded-[20px] border border-[var(--border)] bg-[var(--panel-muted)]"
+          "relative z-10 w-full max-w-5xl overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--panel)] shadow-[var(--shadow-panel)]"
         )}
       >
         <div className="flex items-start justify-between border-b border-[var(--border)] px-6 py-5 sm:px-8">
           <div>
-            <h2 className="text-xl font-semibold tracking-tight text-[var(--panel-foreground)]">{title}</h2>
-            {description ? <p className="mt-1 text-sm text-[var(--muted)]">{description}</p> : null}
+            <h2 className="text-[18px] font-semibold tracking-tight text-[var(--panel-foreground)]">{title}</h2>
+            {description ? <p className="mt-1 text-[14px] text-[var(--muted)]">{description}</p> : null}
           </div>
           <button
-            className="rounded-[var(--radius-control)] border border-[var(--border)] px-3 py-1.5 text-sm font-medium text-[var(--muted)] transition hover:bg-[var(--panel-soft)] hover:text-white"
+            className="rounded-[var(--radius-control)] border border-[var(--border)] px-3 py-1.5 text-[14px] font-medium text-[var(--muted)] transition hover:bg-[var(--panel-soft)] hover:text-white"
             onClick={onClose}
             type="button"
           >

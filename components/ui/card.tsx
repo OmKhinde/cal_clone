@@ -13,7 +13,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-[var(--radius-panel)] border transition-all duration-150",
+        "rounded-[var(--radius-panel)] border shadow-[var(--shadow-soft)] transition-all duration-150",
         tone === "dark"
           ? "border-[var(--border)] bg-[var(--panel-muted)] text-white"
           : "border-[var(--border)] bg-[var(--panel)] text-[var(--panel-foreground)]",

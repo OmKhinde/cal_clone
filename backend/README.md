@@ -45,10 +45,10 @@ To enable booking confirmation emails, create a Resend account, verify a sender 
 If you use Neon or another PgBouncer-style pooled Postgres endpoint with Prisma, use the pooled host with:
 
 ```env
-DATABASE_URL="postgresql://user:password@your-pooler-host/db?sslmode=require&pgbouncer=true&connection_limit=1&pool_timeout=20&connect_timeout=20"
+DATABASE_URL="postgresql://user:password@your-pooler-host/db?sslmode=require&pgbouncer=true&connection_limit=10&pool_timeout=30&connect_timeout=20"
 ```
 
-Without `pgbouncer=true`, Prisma can become flaky under concurrent requests and you may see bursts of 500s after a few successful API calls.
+Without `pgbouncer=true`, Prisma can become flaky under concurrent requests and you may see bursts of 500s after a few successful API calls. If your frontend makes several requests in parallel, very low values like `connection_limit=1` or `connection_limit=5` can also trigger `P2024` pool timeouts.
 
 ## API
 

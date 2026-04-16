@@ -124,7 +124,7 @@ export function PublicBookingPage({ username, eventSlug }: { username: string; e
   const event = eventQuery.data;
 
   return (
-    <div className="min-h-screen px-4 py-6 sm:py-8">
+    <div className="min-h-screen bg-[var(--background)] px-4 py-6 sm:py-8">
       <div className="mx-auto grid max-w-[1180px] gap-6 lg:grid-cols-[360px_minmax(0,1fr)]">
         <Card className="h-fit p-8">
           <div className="mb-6 inline-flex rounded-full bg-[var(--accent-soft)] px-3 py-1.5 text-xs font-semibold text-[var(--accent)]">
@@ -166,7 +166,7 @@ export function PublicBookingPage({ username, eventSlug }: { username: string; e
         <div className="grid gap-6">
           <Card className="overflow-hidden p-0">
             <div className="grid gap-0 xl:grid-cols-[320px_minmax(0,1fr)]">
-              <div className="border-b border-[var(--border)] p-4 xl:border-r xl:border-b-0 xl:p-5">
+              <div className="border-b border-[var(--border)] bg-[var(--panel-muted)] p-4 xl:border-r xl:border-b-0 xl:p-5">
                 <BookingCalendar
                   value={selectedDate}
                   onChange={(date) => {

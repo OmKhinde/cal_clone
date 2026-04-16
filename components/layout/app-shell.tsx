@@ -3,114 +3,138 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import {
+  AppsIcon,
+  BoltIcon,
+  CalendarIcon,
+  ChevronDownIcon,
+  CopyIcon,
+  ExternalLinkIcon,
+  GlobeIcon,
+  GridIcon,
+  InsightsIcon,
+  LinkIcon,
+  RoutingIcon,
+  SearchIcon,
+  UsersIcon
+} from "@/components/ui/icons";
 import { cn } from "@/lib/utils/cn";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/event-types", label: "Event types" },
-  { href: "/bookings", label: "Bookings" },
-  { href: "/availability", label: "Availability" }
+  { href: "/event-types", label: "Event types", icon: LinkIcon },
+  { href: "/bookings", label: "Bookings", icon: CalendarIcon },
+  { href: "/availability", label: "Availability", icon: GlobeIcon }
 ];
 
 const utilityItems = [
-  { label: "Teams" },
-  { label: "Apps" },
-  { label: "Routing" },
-  { label: "Workflows" },
-  { label: "Insights" }
+  { label: "Teams", icon: UsersIcon },
+  { label: "Apps", icon: AppsIcon, expandable: true },
+  { label: "Routing", icon: RoutingIcon },
+  { label: "Workflows", icon: BoltIcon },
+  { label: "Insights", icon: InsightsIcon, expandable: true }
 ];
 
 const footerItems = [
-  { label: "View public page", href: "/booking/demo/30min" },
-  { label: "Copy public page link" },
-  { label: "Refer and earn" },
-  { label: "Settings" }
+  { label: "View public page", href: "/booking/demo/30min", icon: ExternalLinkIcon },
+  { label: "Copy public page link", icon: CopyIcon },
+  { label: "Refer and earn", icon: UsersIcon },
+  { label: "Settings", icon: GridIcon }
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen">
-      <div className="mx-auto flex min-h-screen max-w-[1920px] flex-col gap-4 px-3 py-2 sm:px-4 lg:flex-row lg:gap-6 lg:px-0">
-        <aside className="w-full shrink-0 border-b border-[var(--sidebar-border)] bg-[var(--sidebar)] p-3 lg:sticky lg:top-0 lg:h-screen lg:w-[246px] lg:border-r lg:border-b-0 lg:p-3">
+    <div className="app-shell-grid bg-[var(--background)]">
+      <aside className="border-b border-[var(--sidebar-border)] bg-[var(--sidebar)] lg:sticky lg:top-0 lg:h-screen lg:border-r lg:border-b-0">
+        <div className="flex h-full flex-col px-3 pb-3 pt-4">
           <Link
             href="/event-types"
-            className="flex items-center justify-between rounded-[14px] px-2 py-3"
+            className="flex items-center justify-between rounded-[12px] px-2 py-2.5"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-cyan-300 via-emerald-300 to-sky-500 text-[11px] font-bold text-black">
-                O
+              <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-[#1f2937]">
+                <div className="h-full w-full rounded-full bg-[radial-gradient(circle_at_30%_30%,#f4c98b,transparent_32%),radial-gradient(circle_at_72%_74%,#1cc27d,transparent_27%),linear-gradient(135deg,#2d5bff,#111827)]" />
               </div>
               <h1 className="text-[14px] font-medium text-white">Om Khinde</h1>
             </div>
-            <div className="flex items-center gap-3 text-white/75">
-              <span className="text-xs">⌄</span>
-              <span className="text-sm">⌕</span>
+            <div className="flex items-center gap-3 text-[#a1a1aa]">
+              <ChevronDownIcon className="h-4 w-4" />
+              <SearchIcon className="h-4 w-4" />
             </div>
           </Link>
 
-          <nav className="mt-4 grid gap-1">
+          <nav className="mt-5 grid gap-1">
             {navItems.map((item) => {
               const active = pathname === item.href;
+              const Icon = item.icon;
 
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "rounded-[10px] px-4 py-2.5 text-[15px] font-medium transition-all duration-150",
-                    "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/10",
+                    "flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-[14px] font-medium transition-all duration-150",
                     active
-                      ? "bg-[#4b4b4b] text-white"
-                      : "text-[#f5f5f5] hover:bg-[#232323]"
+                      ? "bg-[#3a3a3d] text-white"
+                      : "text-[#f5f5f5] hover:bg-[#1c1d21]"
                   )}
                 >
+                  <Icon className="h-4 w-4 shrink-0 text-[#d4d4d8]" />
                   {item.label}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="mt-2 grid gap-1">
+          <div className="mt-3 grid gap-1">
             {utilityItems.map((item) => (
               <div
                 key={item.label}
-                className="rounded-[10px] px-4 py-2.5 text-[15px] font-medium text-[#f5f5f5] transition-all duration-150 hover:bg-[#232323]"
+                className="flex items-center justify-between rounded-[10px] px-3 py-2.5 text-[14px] font-medium text-[#f5f5f5] transition-all duration-150 hover:bg-[#1c1d21]"
               >
-                {item.label}
+                <div className="flex items-center gap-3">
+                  <item.icon className="h-4 w-4 shrink-0 text-[#d4d4d8]" />
+                  <span>{item.label}</span>
+                </div>
+                {item.expandable ? <ChevronDownIcon className="h-4 w-4 text-[#71717a]" /> : null}
               </div>
             ))}
           </div>
 
-          <div className="mt-8 hidden lg:block" />
+          <div className="mt-8 hidden lg:block lg:flex-1" />
+
           <div className="mt-8 grid gap-1 lg:mt-auto">
             {footerItems.map((item) =>
               item.href ? (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="rounded-[10px] px-4 py-2 text-[14px] font-medium text-[#f5f5f5] transition-all duration-150 hover:bg-[#232323]"
+                  className="flex items-center gap-3 rounded-[10px] px-3 py-2 text-[14px] font-medium text-[#f5f5f5] transition-all duration-150 hover:bg-[#1c1d21]"
                 >
+                  <item.icon className="h-4 w-4 text-[#d4d4d8]" />
                   {item.label}
                 </Link>
               ) : (
                 <div
                   key={item.label}
-                  className="rounded-[10px] px-4 py-2 text-[14px] font-medium text-[#f5f5f5] transition-all duration-150 hover:bg-[#232323]"
+                  className="flex items-center gap-3 rounded-[10px] px-3 py-2 text-[14px] font-medium text-[#f5f5f5] transition-all duration-150 hover:bg-[#1c1d21]"
                 >
+                  <item.icon className="h-4 w-4 text-[#d4d4d8]" />
                   {item.label}
                 </div>
               )
             )}
-            <p className="px-4 pt-2 text-[11px] text-[#6f6f6f]">© 2026 Cal.com, Inc. v.6.4.0-rcfdd38</p>
+            <p className="px-3 pt-2 text-[10px] text-[#5f6066]">© 2026 Cal.com, Inc. v.6.4.1-h-aac9be5</p>
           </div>
-        </aside>
+        </div>
+      </aside>
 
-        <main className="min-w-0 flex-1 px-3 py-6 text-[var(--foreground)] sm:px-4 lg:px-0 lg:py-6 lg:pr-6">
+      <main className="min-w-0 px-4 py-5 text-[var(--foreground)] sm:px-6 lg:px-9 lg:py-6">
+        <div className="mx-auto max-w-[1680px]">
           {children}
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

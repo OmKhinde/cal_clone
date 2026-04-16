@@ -5,8 +5,15 @@ import { useQueries } from "@tanstack/react-query";
 import Link from "next/link";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
+import { CalendarIcon, GlobeIcon, LinkIcon } from "@/components/ui/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api/client";
+
+const dashboardStats = [
+  { label: "Active event types", href: "/event-types", cta: "Manage event types", icon: LinkIcon },
+  { label: "Upcoming bookings", href: "/bookings", cta: "Open bookings", icon: CalendarIcon },
+  { label: "Available weekdays", href: "/availability", cta: "Edit schedule", icon: GlobeIcon }
+] as const;
 
 export function DashboardPage() {
   const results = useQueries({
@@ -40,24 +47,32 @@ export function DashboardPage() {
     <div>
       <PageHeader
         eyebrow="Dashboard"
-        title="Scheduling command center"
+        title="Dashboard"
         description="A tight overview of your current event catalog, active weekly hours, and the bookings that need attention first."
       />
 
       <div className="grid gap-4 md:grid-cols-3">
-        {[
-          ["Active event types", String(activeEventTypes.length), "/event-types", "Manage event types"],
-          ["Upcoming bookings", String(bookingsQuery.data?.meta.total ?? 0), "/bookings", "Open bookings"],
-          ["Available weekdays", String(activeDays), "/availability", "Edit schedule"]
-        ].map(([label, value, href, cta]) => (
-          <Card key={label} className="p-6">
-            <p className="text-sm font-medium text-[#b8b8b8]">{label}</p>
-            <p className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-white">{value}</p>
-            <Link href={href} className="mt-5 inline-flex text-sm font-medium text-white hover:text-neutral-300">
-              {cta}
+        {dashboardStats.map((item, index) => {
+          const values = [
+            String(activeEventTypes.length),
+            String(bookingsQuery.data?.meta.total ?? 0),
+            String(activeDays)
+          ];
+          const Icon = item.icon;
+
+          return (
+          <Card key={item.label} className="p-6">
+            <div className="flex items-center gap-2 text-sm font-medium text-[#b8b8b8]">
+              <Icon className="h-4 w-4" />
+              <span>{item.label}</span>
+            </div>
+            <p className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-white">{values[index]}</p>
+            <Link href={item.href} className="mt-5 inline-flex text-sm font-medium text-white hover:text-neutral-300">
+              {item.cta}
             </Link>
           </Card>
-        ))}
+          );
+        })}
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">

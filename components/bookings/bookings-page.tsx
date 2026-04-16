@@ -8,6 +8,7 @@ import { TimeSlotList } from "@/components/booking/time-slot-list";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CalendarIcon, FilterIcon, MenuIcon } from "@/components/ui/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { api, createIdempotencyKey } from "@/lib/api/client";
@@ -130,17 +131,18 @@ export function BookingsPage() {
     <div>
       <PageHeader
         eyebrow="Bookings"
-        title="Calendar activity"
+        title="Bookings"
         description="Review accepted and pending bookings, confirm requests, cancel with context, and reschedule from the host dashboard."
         action={
           <div className="flex flex-wrap gap-3">
             <Button variant="secondary" size="sm">Saved filters</Button>
-            <Button variant="dark" size="icon">☰</Button>
+            <Button variant="dark" size="icon"><MenuIcon className="h-4 w-4" /></Button>
+            <Button variant="dark" size="icon"><CalendarIcon className="h-4 w-4" /></Button>
           </div>
         }
       />
 
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="inline-flex flex-wrap rounded-[12px] border border-[var(--border)] bg-[var(--panel)] p-1">
           {tabs.map((tab) => (
             <button
@@ -157,13 +159,13 @@ export function BookingsPage() {
             </button>
           ))}
         </div>
-        <Button variant="secondary" size="sm">Filter</Button>
+        <Button variant="secondary" size="sm"><FilterIcon className="h-4 w-4" />Filter</Button>
       </div>
 
       {isLoading ? (
         <Skeleton className="h-96 w-full" />
       ) : (
-        <Card className="min-h-[380px] p-0">
+        <Card className="min-h-[380px] overflow-hidden border-dashed p-0">
           <div className="max-h-[42rem] overflow-y-auto pr-1">
           <div className="grid gap-4 p-4">
             {data?.data.map((booking) => {
@@ -189,9 +191,9 @@ export function BookingsPage() {
 
             {!data?.data.length ? (
               <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center">
-                <div className="flex h-18 w-18 items-center justify-center rounded-full bg-[#3b3b3b] text-3xl text-white/90">◫</div>
-                <h2 className="mt-6 text-[2rem] font-semibold tracking-[-0.04em] text-white">No {status} bookings</h2>
-                <p className="mt-3 max-w-xl text-base text-[#c7c7c7]">
+                <div className="flex h-18 w-18 items-center justify-center rounded-full bg-[#3b3b3b] text-white/90"><CalendarIcon className="h-8 w-8" /></div>
+                <h2 className="mt-6 text-[18px] font-semibold text-white">No {status} bookings</h2>
+                <p className="mt-3 max-w-xl text-[14px] leading-7 text-[#c7c7c7]">
                   You have no {status} bookings. As soon as someone books a time with you it will show up here.
                 </p>
               </div>
@@ -232,21 +234,21 @@ function BookingCard({
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <div className="mb-2 flex items-center gap-2">
-            <span className="rounded-[6px] bg-[#2a2a2a] px-2.5 py-1 text-xs font-medium text-[#c8c8c8]">
+            <span className="rounded-[6px] bg-[#2a2a2a] px-2.5 py-1 text-[11px] font-medium text-[#c8c8c8]">
               {booking.status}
             </span>
-            <span className="text-xs font-medium text-[#a7a7a7]">{booking.eventType.title}</span>
-            {booking.videoCallUrl ? <span className="text-xs font-medium text-[#a7a7a7]">Video ready</span> : null}
+            <span className="text-[11px] font-medium text-[#a7a7a7]">{booking.eventType.title}</span>
+            {booking.videoCallUrl ? <span className="text-[11px] font-medium text-[#a7a7a7]">Video ready</span> : null}
           </div>
-          <h2 className="text-xl font-semibold tracking-[-0.02em] text-white">
+          <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-white">
             {booking.attendee?.name ?? booking.title}
           </h2>
-          <p className="mt-1 text-sm text-[#b8b8b8]">{booking.attendee?.email}</p>
-          <p className="mt-3 text-sm font-medium text-[#ededed]">
+          <p className="mt-1 text-[14px] text-[#b8b8b8]">{booking.attendee?.email}</p>
+          <p className="mt-3 text-[14px] font-medium text-[#ededed]">
             {format(new Date(booking.start), "PPP p")} to {format(new Date(booking.end), "p")}
           </p>
-          {booking.description ? <p className="mt-2 text-sm text-[#b8b8b8]">{booking.description}</p> : null}
-          {booking.guests.length ? <p className="mt-2 text-sm text-[#b8b8b8]">Guests: {booking.guests.join(", ")}</p> : null}
+          {booking.description ? <p className="mt-2 text-[14px] text-[#b8b8b8]">{booking.description}</p> : null}
+          {booking.guests.length ? <p className="mt-2 text-[14px] text-[#b8b8b8]">Guests: {booking.guests.join(", ")}</p> : null}
         </div>
 
         <div className="flex flex-wrap gap-2">

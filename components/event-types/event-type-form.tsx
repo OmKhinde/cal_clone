@@ -117,7 +117,7 @@ export function EventTypeForm({
         mutation.mutate();
       }}
     >
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 rounded-[14px] border border-[var(--border)] bg-[var(--panel-muted)] p-5 sm:grid-cols-2">
         <label className="grid gap-2 text-sm">
           <span className="font-semibold text-[var(--foreground)]">Title</span>
           <Input value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} required />
@@ -132,7 +132,7 @@ export function EventTypeForm({
         </label>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 rounded-[14px] border border-[var(--border)] bg-[var(--panel-muted)] p-5 sm:grid-cols-3">
         <label className="grid gap-2 text-sm">
           <span className="font-semibold text-[var(--foreground)]">Duration</span>
           <Input type="number" min={5} step={5} value={form.duration} onChange={(event) => setForm((current) => ({ ...current, duration: Number(event.target.value) }))} />
@@ -152,7 +152,7 @@ export function EventTypeForm({
         </label>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 rounded-[14px] border border-[var(--border)] bg-[var(--panel-muted)] p-5 sm:grid-cols-2">
         <label className="grid gap-2 text-sm">
           <span className="font-semibold text-[var(--foreground)]">Event timezone</span>
           <Select value={form.timeZone} onChange={(event) => setForm((current) => ({ ...current, timeZone: event.target.value }))}>
@@ -175,14 +175,14 @@ export function EventTypeForm({
       </div>
 
       {form.periodType === "ROLLING" ? (
-        <label className="grid gap-2 text-sm sm:max-w-xs">
+        <label className="grid gap-2 rounded-[14px] border border-[var(--border)] bg-[var(--panel-muted)] p-5 text-sm sm:max-w-xs">
           <span className="font-semibold text-[var(--foreground)]">Rolling window days</span>
           <Input type="number" min={1} value={form.periodDays} onChange={(event) => setForm((current) => ({ ...current, periodDays: Number(event.target.value) }))} />
         </label>
       ) : null}
 
       {form.periodType === "RANGE" ? (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 rounded-[14px] border border-[var(--border)] bg-[var(--panel-muted)] p-5 sm:grid-cols-2">
           <label className="grid gap-2 text-sm">
             <span className="font-semibold text-[var(--foreground)]">Start date</span>
             <Input type="datetime-local" value={form.periodStartDate} onChange={(event) => setForm((current) => ({ ...current, periodStartDate: event.target.value }))} />
@@ -194,7 +194,7 @@ export function EventTypeForm({
         </div>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 rounded-[14px] border border-[var(--border)] bg-[var(--panel-muted)] p-5 sm:grid-cols-3">
         <label className="grid gap-2 text-sm">
           <span className="font-semibold text-[var(--foreground)]">Minimum notice (min)</span>
           <Input type="number" min={0} value={form.minimumBookingNotice} onChange={(event) => setForm((current) => ({ ...current, minimumBookingNotice: Number(event.target.value) }))} />
@@ -209,7 +209,7 @@ export function EventTypeForm({
         </label>
       </div>
 
-      <div className="grid gap-3 rounded-[28px] border border-[var(--border)] bg-[var(--panel-muted)] p-5">
+      <div className="grid gap-3 rounded-[14px] border border-[var(--border)] bg-[var(--panel-muted)] p-5">
         <label className="flex items-center gap-3 text-sm text-[var(--muted)]">
           <input type="checkbox" checked={form.bookingLimitEnabled} onChange={(event) => setForm((current) => ({ ...current, bookingLimitEnabled: event.target.checked }))} />
           Limit bookings by period
@@ -232,7 +232,7 @@ export function EventTypeForm({
         ) : null}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 rounded-[14px] border border-[var(--border)] bg-[var(--panel-muted)] p-5 sm:grid-cols-2">
         <label className="grid gap-2 text-sm">
           <span className="font-semibold text-[var(--foreground)]">Location types</span>
           <Input value={form.locationTypes} onChange={(event) => setForm((current) => ({ ...current, locationTypes: event.target.value }))} placeholder="google-meet, zoom" />
@@ -243,7 +243,7 @@ export function EventTypeForm({
         </label>
       </div>
 
-      <div className="grid gap-3 rounded-[28px] border border-[var(--border)] bg-[var(--panel-muted)] p-5">
+      <div className="grid gap-3 rounded-[14px] border border-[var(--border)] bg-[var(--panel-muted)] p-5">
         <label className="flex items-center gap-3 text-sm text-[var(--muted)]">
           <input type="checkbox" checked={form.isHidden} onChange={(event) => setForm((current) => ({ ...current, isHidden: event.target.checked }))} />
           Hide from profile
