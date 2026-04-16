@@ -1,0 +1,236 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BookingStatus {
+  ACCEPTED
+  PENDING
+  CANCELLED
+  REJECTED
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum SchedulingType {
+  INDIVIDUAL
+  ONE_ON_ONE
+  ROUND_ROBIN
+  COLLECTIVE
+  GROUP
+}
+
+enum PeriodType {
+  UNLIMITED
+  ROLLING
+  RANGE
+}
+
+enum BookingLimitFrequency {
+  DAY
+  WEEK
+  MONTH
+}
+
+enum BookingPaymentStatus {
+  NOT_REQUIRED
+  REQUIRED
+  PAID
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  name         String
+  email        String         @unique
+  username     String         @unique
+  timezone     String         @default("UTC")
+  createdAt    DateTime       @default(now())
+
+  eventTypes   EventType[]
+  hostedEvents EventTypeHost[]
+  assignedBookings Booking[]   @relation("AssignedHostBookings")
+  availability Availability[]
+  attendeeBookings Attendee[]
+
+  @@map("users")
+}
+
+model Team {
+  id         Int         @id @default(autoincrement())
+  name       String
+  slug       String      @unique
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  eventTypes EventType[]
+
+  @@map("teams")
+}
+
+model EventType {
+  id                    Int                    @id @default(autoincrement())
+  userId                Int?
+  teamId                Int?
+  title                 String
+  description           String?
+  duration              Int
+  slug                  String
+  isActive              Boolean                @default(true)
+  isHidden              Boolean                @default(false)
+  color                 String                 @default("#6366f1")
+  schedulingType        SchedulingType         @default(INDIVIDUAL)
+  maxAttendees          Int?
+  timeZone              String?
+  periodType            PeriodType             @default(ROLLING)
+  periodDays            Int?
+  periodStartDate       DateTime?
+  periodEndDate         DateTime?
+  minimumBookingNotice  Int                    @default(0)
+  beforeEventBuffer     Int                    @default(0)
+  afterEventBuffer      Int                    @default(0)
+  bookingLimitEnabled   Boolean                @default(false)
+  bookingLimitCount     Int?
+  bookingLimitFrequency BookingLimitFrequency?
+  locations             Json?
+  bookingFields         Json?
+  requiresConfirmation  Boolean                @default(false)
+  price                 Int                    @default(0)
+  currency              String                 @default("usd")
+  paymentEnabled        Boolean                @default(false)
+  successRedirectUrl    String?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+
+  user     User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team     Team?           @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  hosts    EventTypeHost[]
+  bookings Booking[]
+
+  @@unique([userId, slug])
+  @@unique([teamId, slug])
+  @@index([slug])
+  @@index([userId, isActive])
+  @@index([teamId])
+  @@map("event_types")
+}
+
+model EventTypeHost {
+  id          Int       @id @default(autoincrement())
+  eventTypeId Int
+  userId      Int
+  isFixed     Boolean   @default(false)
+
+  eventType EventType @relation(fields: [eventTypeId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventTypeId, userId])
+  @@map("event_type_hosts")
+}
+
+model Availability {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  dayOfWeek DayOfWeek
+  startTime String
+  endTime   String
+  isActive  Boolean   @default(true)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dayOfWeek])
+  @@index([userId])
+  @@map("availability")
+}
+
+model Booking {
+  id               Int           @id @default(autoincrement())
+  uid              String        @unique @default(cuid())
+  eventTypeId      Int
+  assignedHostId   Int?
+  idempotencyKey   String?       @unique
+  bookerName       String
+  bookerEmail      String
+  startTime        DateTime
+  endTime          DateTime
+  status           BookingStatus @default(ACCEPTED)
+  paymentStatus    BookingPaymentStatus @default(NOT_REQUIRED)
+  notes            String?
+  cancelToken      String?       @unique @default(cuid())
+  rescheduled      Boolean       @default(false)
+  fromRescheduleUid String?
+  responses        Json?
+  metadata         Json?
+  location         String?
+  noShowHost       Boolean       @default(false)
+  cancellationReason String?
+  rejectionReason  String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  eventType    EventType @relation(fields: [eventTypeId], references: [id], onDelete: Cascade)
+  assignedHost User?     @relation("AssignedHostBookings", fields: [assignedHostId], references: [id])
+  attendees    Attendee[]
+  references   BookingReference[]
+
+  @@index([eventTypeId])
+  @@index([startTime])
+  @@index([status])
+  @@index([eventTypeId, startTime])
+  @@index([status, startTime])
+  @@index([eventTypeId, status, startTime])
+  @@index([assignedHostId, startTime, endTime])
+  @@index([idempotencyKey])
+  @@map("bookings")
+}
+
+model Attendee {
+  id            Int      @id @default(autoincrement())
+  bookingId     Int
+  userId        Int?
+  email         String
+  name          String
+  timeZone      String
+  language      String?  @default("en")
+  isPrimary     Boolean  @default(false)
+  noShow        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([bookingId])
+  @@index([email])
+  @@index([bookingId, isPrimary])
+  @@map("attendees")
+}
+
+model BookingReference {
+  id                 Int      @id @default(autoincrement())
+  bookingId          Int
+  type               String
+  uid                String
+  meetingId          String?
+  meetingPassword    String?
+  meetingUrl         String?
+  externalCalendarId String?
+  deleted            Boolean  @default(false)
+  credentialId       Int?
+  createdAt          DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@map("booking_references")
+}
