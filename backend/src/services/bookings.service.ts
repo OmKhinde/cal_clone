@@ -132,6 +132,7 @@ type BookingRecord = any;
 
 const TX_MAX_WAIT_MS = 10_000;
 const TX_TIMEOUT_MS = 20_000;
+const prismaSql = Prisma as any;
 type BookingExecutor = any;
 type HostRecord = { id: number; name: string; email: string; timezone: string };
 type AttendeeRecord = {
@@ -439,18 +440,18 @@ async function assertNoOverlappingBookings(input: {
   const requestedBlockStart = addMinutesUtc(input.requestedStart, -input.beforeEventBuffer);
   const requestedBlockEnd = addMinutesUtc(input.requestedEnd, input.afterEventBuffer);
   const hostScope = input.assignedHostId
-    ? Prisma.sql`b."assignedHostId" = ${input.assignedHostId}`
-    : Prisma.sql`b."eventTypeId" = ${input.eventTypeId}`;
+    ? prismaSql.sql`b."assignedHostId" = ${input.assignedHostId}`
+    : prismaSql.sql`b."eventTypeId" = ${input.eventTypeId}`;
   const excludeClause =
     input.excludeBookingId !== undefined
-      ? Prisma.sql`AND b."id" <> ${input.excludeBookingId}`
-      : Prisma.empty;
+      ? prismaSql.sql`AND b."id" <> ${input.excludeBookingId}`
+      : prismaSql.empty;
   const statuses = input.statuses ?? ACTIVE_BOOKING_STATUSES;
-  const statusValues = Prisma.join(
-    statuses.map((status) => Prisma.sql`${status}::"BookingStatus"`)
+  const statusValues = prismaSql.join(
+    statuses.map((status) => prismaSql.sql`${status}::"BookingStatus"`)
   );
 
-  const conflicts = (await input.db.$queryRaw(Prisma.sql`
+  const conflicts = (await input.db.$queryRaw(prismaSql.sql`
     SELECT b."id"
     FROM "bookings" b
     INNER JOIN "event_types" et ON et."id" = b."eventTypeId"
