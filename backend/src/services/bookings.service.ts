@@ -754,7 +754,7 @@ export async function listBookings(status: BookingListStatus, options: BookingLi
     where.status = "PENDING";
   } else if (status === "past") {
     where.startTime = { lt: now };
-    where.status = { in: ["ACCEPTED", "PENDING", "REJECTED", "CANCELLED"] };
+    where.status = { in: ["ACCEPTED", "PENDING", "REJECTED"] };
   } else {
     where.startTime = { gte: now };
     where.status = { in: ["ACCEPTED"] };

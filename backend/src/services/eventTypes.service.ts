@@ -52,7 +52,7 @@ const eventTypeListInclude = {
 } as const;
 
 function bookingUrl(username: string, slug: string) {
-  return `${env.FRONTEND_URL.replace(/\/$/, "")}/${username}/${slug}`;
+  return `${env.FRONTEND_URL.replace(/\/$/, "")}/u/${username}/${slug}`;
 }
 
 function normalizeEventTypeInput(input: CreateEventTypeInput | UpdateEventTypeInput) {
@@ -167,6 +167,62 @@ export async function getPublicEvent(username: string, slug: string) {
     price: eventType.price,
     currency: eventType.currency,
     color: eventType.color
+  };
+}
+
+export async function getPublicProfile(username: string) {
+  const user = await prisma.user.findUnique({
+    where: { username },
+    select: {
+      name: true,
+      username: true,
+      timezone: true,
+      eventTypes: {
+        where: {
+          isActive: true,
+          isHidden: false
+        },
+        orderBy: [
+          { createdAt: "desc" },
+          { id: "desc" }
+        ],
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          duration: true,
+          slug: true,
+          color: true,
+          schedulingType: true,
+          user: {
+            select: {
+              username: true
+            }
+          }
+        }
+      }
+    }
+  });
+
+  if (!user) {
+    throw new AppError("PUBLIC_PROFILE_NOT_FOUND", "Public profile not found.", 404);
+  }
+
+  return {
+    name: user.name,
+    username: user.username,
+    timezone: user.timezone,
+    events: user.eventTypes.map((eventType) => ({
+      id: eventType.id,
+      title: eventType.title,
+      description: eventType.description,
+      duration: eventType.duration,
+      slug: eventType.slug,
+      color: eventType.color,
+      schedulingType:
+        eventType.schedulingType === "ONE_ON_ONE" ? "INDIVIDUAL" : eventType.schedulingType,
+      bookingUrl: bookingUrl(user.username, eventType.slug)
+    }))
   };
 }
 

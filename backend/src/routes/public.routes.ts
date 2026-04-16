@@ -4,17 +4,23 @@ import {
   rescheduleBookingController,
   updateBookingStatusController
 } from "../controllers/bookings.controller.js";
-import { getPublicEventController } from "../controllers/eventTypes.controller.js";
+import { getPublicEventController, getPublicProfileController } from "../controllers/eventTypes.controller.js";
 import { validate } from "../middleware/validate.js";
 import {
   bookingUidParamsSchema,
   rescheduleBookingSchema,
   updateBookingStatusSchema
 } from "../schemas/bookings.schema.js";
-import { publicEventParamsSchema } from "../schemas/eventTypes.schema.js";
+import { publicEventParamsSchema, publicProfileParamsSchema } from "../schemas/eventTypes.schema.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const publicRouter = Router();
+
+publicRouter.get(
+  "/profile/:username",
+  validate(publicProfileParamsSchema),
+  asyncHandler(getPublicProfileController)
+);
 
 publicRouter.get(
   "/event/:username/:slug",

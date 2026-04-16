@@ -3,6 +3,7 @@ import {
   createEventType,
   deleteEventType,
   getEventTypeBySlug,
+  getPublicProfile,
   getPublicEvent,
   listEventTypes,
   updateEventType
@@ -35,5 +36,10 @@ export async function deleteEventTypeController(req: Request, res: Response) {
 
 export async function getPublicEventController(req: Request, res: Response) {
   const data = await getPublicEvent(String(req.params.username), String(req.params.slug));
+  res.json({ data });
+}
+
+export async function getPublicProfileController(req: Request, res: Response) {
+  const data = await getPublicProfile(String(req.params.username));
   res.json({ data });
 }

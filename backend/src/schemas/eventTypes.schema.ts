@@ -185,6 +185,12 @@ export const publicEventParamsSchema = z.object({
   })
 });
 
+export const publicProfileParamsSchema = z.object({
+  params: z.object({
+    username: usernameSchema
+  })
+});
+
 export const createEventTypeSchema = z.object({
   body: eventTypeBodySchema
 });
